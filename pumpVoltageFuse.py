@@ -11,12 +11,12 @@ import Adafruit_MCP3008
 SPI_PORT   = 0
 SPI_DEVICE = 0
 mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
-
 voltageStates = {} 
 voltageStates["description"] = []                                   
 postUrl = 'http://spaceplants.datascientists.com/web/rest/public/savelog'
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
+#pumping code
 Relay_Ch1 = 21
 Relay_Ch2 = 26
 Relay_Ch3 = 19
@@ -53,8 +53,12 @@ pumpStates = {}
 pumpStates["description"] = []
 pumpingCount = 0   #add to count if it turns on  - perhaps keep track of this each day? Store locally?
 
-postUrl = 'http://spaceplants.datascientists.com/web/rest/public/savelog'
-headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
+scheduleUrl = "http://spaceplants.datascientists.com/web/rest/public/wateringschedule?location_identifier="
+print scheduleUrl 
+location_identifier= "ozr7Zc7VBH1500963678811"
+scheduleUrl = scheduleUrl + location_identifier
+print scheduleUrl
 
 def pumpWatering():
     values = []
@@ -65,16 +69,12 @@ def pumpWatering():
     global running
     global pumpingCount
     pumpState = "default"
-    url = "http://spaceplants.datascientists.com/web/rest/public/wateringschedule?location_identifier="
-    print url 
-    location_identifier= "ozr7Zc7VBH1500963678811"
     pumpStates["description"].append(location_identifier)
     pumpStates["description"].append("pump status check")
         
-    url = url + location_identifier
-    print url
+
     try:
-        response = requests.get(url)
+        response = requests.get(scheduleUrl)
         #successful so carry on using response
         data = json.loads(response.text)
         
@@ -82,7 +82,7 @@ def pumpWatering():
         print data
         #Perhaps could store this locally? use this local copy if unable to connect to internet for a few hours? 
         #Is there a period of time after which plants usually need to be watered? E.g. every 6 hours? 12 hours? Guess it depends on the rain? 
-        # pumpStates['schedule_url'] = url
+        # pumpStates['schedule_url'] = scheduleUrl
         # pumpStates['schedule pulled from internet'] = data
         # pumpStates['location identifier'] = location_identifier
         if 'timezone' in data.keys():
