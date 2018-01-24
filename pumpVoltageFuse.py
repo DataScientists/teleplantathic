@@ -7,6 +7,8 @@ import RPi.GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 
+import config
+
 # Hardware SPI configuration for ADC (MCP3008):
 SPI_PORT   = 0
 SPI_DEVICE = 0
@@ -56,9 +58,10 @@ pumpingCount = 0   #add to count if it turns on  - perhaps keep track of this ea
 
 scheduleUrl = "http://spaceplants.datascientists.com/web/rest/public/wateringschedule?location_identifier="
 print scheduleUrl 
-location_identifier= "ozr7Zc7VBH1500963678811"
+location_identifier= config.location_identifier
 scheduleUrl = scheduleUrl + location_identifier
 print scheduleUrl
+
 
 def pumpWatering():
     values = []
@@ -71,8 +74,9 @@ def pumpWatering():
     pumpState = "default"
     pumpStates["description"].append(location_identifier)
     pumpStates["description"].append("pump status check")
-        
-
+    print '\n\n Pump check'
+    
+    
     try:
         response = requests.get(scheduleUrl)
         #successful so carry on using response
@@ -159,6 +163,7 @@ def pumpWatering():
                             pumpStates["description"].append("turning on")
                             # pumpStates[str(now)] = pumpState
                             GPIO.output(Relay_Ch1,GPIO.LOW)
+                            print 'for: ' + run_time + ' minutes'
                             time.sleep(run_time*60)
                             
                             if 'timezone' in data.keys():
@@ -221,6 +226,7 @@ def pumpWatering():
 
 
 def voltageReading():
+    print '\n\n Voltage Reading'
     values = []
     now = datetime.datetime.now()
     voltageStates['date'] = str(now)
