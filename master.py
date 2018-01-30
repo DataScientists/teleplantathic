@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import time, datetime, calendar
 from pytz import timezone
 import requests, json
@@ -297,9 +299,16 @@ def voltageReading():
     voltageRunning = False
 
 
-#subprocess.call('sudo node /home/pi/spaceplants/node-flower-bridge/start.js')
+try:
+    subprocess.check_call(["./node-flower-bridge/bridge", "background" , "20"])  #works? how do we pass in arguments
+    #https://www.webcodegeeks.com/python/python-subprocess-example/
+    #https://stackoverflow.com/questions/5788891/execute-a-file-with-arguments-in-python-shell
+    #this node code didn't work
+    #subprocess.check_call(['node', './spaceplants/node-flower-bridge/start.js'])
+except subprocess.CalledProcessError as e:
+    print e.output
+    print "subprocess error"
 
-#need to run code for flower power if not running? 
 while pumpRunning:
     try:
         pumpWatering()

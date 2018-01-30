@@ -1,3 +1,6 @@
-*/10 * * * * /usr/bin/python /home/pi/spaceplants/pumpVoltageFuse.py >> /home/pi/spaceplants/pumpVoltagePrintout.txt
-*/20 * * * * /home/pi/node-flower-bridge/bridge background
-
+*/10 * * * * /usr/bin/python /home/pi/spaceplants/master.py >> /home/pi/spaceplants/pumpVoltagePrintout.txt
+#https://corenominal.org/2016/05/12/howto-setup-a-crontab-file/
+#use the command crontab crontab.txt 
+#to replace crontab file with this one if in spaceplants directory?
+#crontab -l to view a list of jobs
+#crontab -e to edit existing file?
