@@ -84,6 +84,7 @@ def logImportError(errorMessage):
     logging(postUrl, importLog)        
 
 #https://stackoverflow.com/questions/3131217/error-handling-when-importing-modules
+
 try:
     import RPi.GPIO as GPIO
 except ImportError:
@@ -103,7 +104,7 @@ try:
     import Adafruit_MCP3008
 except ImportError:
     logImportError("import Adafruit_MCP3008 Error")   
-
+    voltageRunning = False
 
 try:
     # https://stackoverflow.com/questions/35788729/start-node-app-from-python-script
@@ -185,8 +186,6 @@ def pumpWatering():
             if calendar.day_name[now.weekday()].lower() == i: 
                 print 'found ', calendar.day_name[now.weekday()], 'in pump schedule\n'
                 print data[i] 
-                # print len(data[i])
-                data[i]=[]
 
                 #if there's something scheduled on this day
                 if len(data[i]) <= 0: 
@@ -315,6 +314,5 @@ while voltageRunning:
         print "interuppted"
         voltageRunning = False
         
-GPIO.cleanup()
 print pumpStates
 print 'all done, bye'
